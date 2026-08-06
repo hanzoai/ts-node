@@ -1,0 +1,13 @@
+# ts-node — the full TypeScript compile of the package (tsc -b, 63 emitted
+# modules), run through the yarn 3.4.1 release the repo commits, so the gate
+# needs nothing on the runner but node. Red on any type error.
+#
+# `--mode=skip-build` skips dependency postinstalls only: the one that matters
+# here is dprint, whose install downloads a prebuilt binary and is used solely
+# by `yarn fmt`. The ava suite is deliberately not the gate — it spawns node
+# 10/12/14/16/18/20 matrices and takes tens of minutes on a shared fleet.
+test:
+  - name: tsc
+    run: |
+      node .yarn/releases/yarn-3.4.1.cjs install --immutable --mode=skip-build
+      node .yarn/releases/yarn-3.4.1.cjs build-tsc
